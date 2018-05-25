@@ -66,7 +66,7 @@ $app->get('/registroUsuario/{correo}/{nombre}/{apellido}/{password}/{nacionalida
     $db = new BBDDaplicacion();
     if($db->insertarUsuario($correo, $nombre, $apellido, $pass, $nacionalidad)){
         $responseData['error'] = false;
-        $responseData['message'] = 'usuario registrado correctamente';
+        $responseData['mensage'] = 'usuario registrado correctamente';
     } else {
         $responseData['error'] = true;
         $responseData['message'] = 'no se ha podido registrar';
@@ -83,10 +83,10 @@ $app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Resp
 
                if( $db->insertarEvento($idUsuario,$deporte)){
                    $responseData['error'] = false;
-                   $responseData['message'] = 'evento registrado correctamente';
+                   $responseData['mensage'] = 'evento registrado correctamente';
                } else {
                    $responseData['error'] = true;
-                   $responseData['message'] = 'no se ha podido registrar';
+                   $responseData['mensage'] = 'no se ha podido registrar';
                }
 
      $response->getBody()->write(json_encode($responseData));
