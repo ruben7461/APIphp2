@@ -17,7 +17,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
 
 
 
-$app->get('/obtenerUsuarios', function (Request $request, Response $response){
+$app->get('/usuarios', function (Request $request, Response $response){
 	$db = new BBDDaplicacion();
     return $response
         ->withHeader('Content-type', 'application/json')
@@ -29,7 +29,7 @@ $app->get('/obtenerUsuarios', function (Request $request, Response $response){
 
 });
 
-$app->get('/obtenerDeportes', function (Request $request, Response $response){
+$app->get('/deportes', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
     return $response
         ->withHeader('Content-type', 'application/json')
