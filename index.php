@@ -9,7 +9,12 @@ require_once './BBDDaplicacion.php';
 
 
 //prueba de Slim
-$app = new \Slim\App;
+$app = new \Slim\App([
+
+    'settings' => [
+        'displayErrorDetails' => true
+    ]
+]);
 $app->get('/hello/{name}', function (Request $request, Response $response) {
     $name = $request->getAttribute('name');
     $response->getBody()->write("Hello, $name");
@@ -111,15 +116,15 @@ $app->get('/login/{email}/{password}', function (Request $request, Response $res
     $password = $request -> getAttribute("password");
 
 
-    if ($db->ComprobarLogin($email, $password)) {
+    if ($db->ComprobarLogin($email, $password) == true) {
         $responseData['error'] = false;
         $responseData['user'] = $db->obtenerUsuarioEmail($email);
     } else {
         $responseData['error'] = true;
-        $responseData['message'] = 'email inválido';
+        $responseData['message'] = 'usuario invalido';
     }
 
-
+        $response->getBody()->write(json_encode($responseData));
 });
 
 $app->run();

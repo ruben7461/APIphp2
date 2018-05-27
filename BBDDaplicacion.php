@@ -71,15 +71,14 @@ class BBDDaplicacion {
 
     public function ComprobarLogin($email,$pass){
 
-        $stmt = $this->mysqli->query("SELECT * FROM TablaUsuarios WHERE correo = ? AND password = ?;");
+        $stmt = $this->mysqli->prepare("SELECT  id_usuario FROM TablaUsuarios WHERE correo = ? AND password = ?;");
 
         $stmt->bind_param('ss', $email,$pass);
-
-        $result = $stmt->get_result();
-        $usuarioExistente = $result->fetch_all();
-
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
 
+        return $resultado->num_rows > 0;
     }
     
 //    obtiene todos los deportes que esten registrados en la BBDD junto con las fotos asociadas a ella
@@ -114,23 +113,24 @@ class BBDDaplicacion {
 
 
      //obtiene informacion a traves del email que se le pasa
-        public function obtenerUsuarioEmail($email)
+        public function obtenerUsuarioEmail($correo)
          {
              $id_usuario = '';
              $nombre = '';
              $email = '';
-             $genero = '';
-             $stmt = $this->con->prepare("SELECT id_usuario, nombre, correo, genero FROM TablaUsuarios WHERE correo = ?");
-             $stmt->bind_param("s", $email);
+             $apellidos = '';
+             $stmt = $this->mysqli->prepare("SELECT id_usuario, nombre, apellidos FROM TablaUsuarios WHERE correo = ?");
+             $stmt->bind_param("s", $correo);
              $stmt->execute();
-             $stmt->bind_result($id_usuario, $nombre, $email, $genero);
-             $stmt->fetch_all();
-             $user = array();
-             $user['id_usuario'] = $id_usuario;
-             $user['nombre'] = $nombre;
-             $user['correo'] = $email;
-             $user['genero'] = $genero;
-             return $user;
+             $stmt->bind_result($id_usuario, $nombre,$apellidos);
+             $result = $stmt->get_result();
+
+             $peoples = $result->fetch_array(MYSQLI_ASSOC);
+             $stmt->close();
+
+
+             $stmt->close();
+             return $peoples;
          }
 
 
