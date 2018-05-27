@@ -7,6 +7,8 @@ require './vendor/autoload.php';
 require_once './BBDDaplicacion.php';
 
 
+
+//prueba de Slim
 $app = new \Slim\App;
 $app->get('/hello/{name}', function (Request $request, Response $response) {
     $name = $request->getAttribute('name');
@@ -17,6 +19,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
 
 
 
+//obtiene todos los usuarios
 $app->get('/usuarios', function (Request $request, Response $response){
 	$db = new BBDDaplicacion();
     return $response
@@ -29,6 +32,7 @@ $app->get('/usuarios', function (Request $request, Response $response){
 
 });
 
+//obtiene el nombre del deporte y su respectiva foto
 $app->get('/deportes', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
     return $response
@@ -42,6 +46,7 @@ $app->get('/deportes', function (Request $request, Response $response){
 });
 
 
+//obtener la lista de amigos de un usuario en concreto
 $app->get('/obtenerAmigos/{idUsuario}', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
     $idUsuario = $request->getAttribute('idUsuario');
@@ -56,6 +61,7 @@ $app->get('/obtenerAmigos/{idUsuario}', function (Request $request, Response $re
 });
 
 
+//registrar usuario con todos los parametros marcados
 $app->get('/registroUsuario/{correo}/{nombre}/{apellido}/{password}/{nacionalidad}', function (Request $request, Response $response) {
 
     $correo = $request->getAttribute('correo');;
@@ -76,6 +82,7 @@ $app->get('/registroUsuario/{correo}/{nombre}/{apellido}/{password}/{nacionalida
 
 });
 
+//para crear un evento pasandole el idUsuario y el deporte
 $app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
     $idUsuario = $request->getAttribute('idUsuario');
@@ -90,6 +97,27 @@ $app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Resp
                }
 
      $response->getBody()->write(json_encode($responseData));
+
+
+});
+
+
+
+//comprobacion del login,si hay resultados,obtiene los datos de ese usuario
+$app->get('/login/{email}/{password}', function (Request $request, Response $response){
+    $db = new BBDDaplicacion();
+
+    $email = $request-> getAttribute("email");
+    $password = $request -> getAttribute("password");
+
+
+    if ($db->ComprobarLogin($email, $password)) {
+        $responseData['error'] = false;
+        $responseData['user'] = $db->obtenerUsuarioEmail($email);
+    } else {
+        $responseData['error'] = true;
+        $responseData['message'] = 'email inválido';
+    }
 
 
 });

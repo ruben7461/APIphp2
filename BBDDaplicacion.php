@@ -65,6 +65,22 @@ class BBDDaplicacion {
              
   
     }
+
+
+    //comprueba el login si es correcto o no
+
+    public function ComprobarLogin($email,$pass){
+
+        $stmt = $this->mysqli->query("SELECT * FROM TablaUsuarios WHERE correo = ? AND password = ?;");
+
+        $stmt->bind_param('ss', $email,$pass);
+
+        $result = $stmt->get_result();
+        $usuarioExistente = $result->fetch_all();
+
+
+
+    }
     
 //    obtiene todos los deportes que esten registrados en la BBDD junto con las fotos asociadas a ella
      public function ObtenerDeportes(){        
@@ -72,29 +88,52 @@ class BBDDaplicacion {
 
         
        $resultado = $result->fetch_all();
-            
-        foreach ($resultado as $row) {
-            $deportes[] = new Deporte($row[0], base64_encode($row[1]));
-            //guardamos la columna de  fotosDeporte recibidas en un arreglo y lo decodificamos en el formato base 64
-            $fotitos[] =base64_encode($row['fotoDeporte']);
-        }
-            //guardamos la columna de  nombreDeporte recibidas en un arreglo
-           //$deportes[] = $row['nombreDeporte'];
-   
-        
-        
-        //hacemos un 2 ciclos for para recorrer cada arreglo y guardarlas en un array en conjunto
+
+         foreach ($resultado as $row) {
+             $deportes[] = new Deporte($row[0], base64_encode($row[1]));
+             //guardamos la columna de  fotosDeporte recibidas en un arreglo y lo decodificamos en el formato base 64
+             $fotitos[] =base64_encode($row['fotoDeporte']);
+         }
+         //guardamos la columna de  nombreDeporte recibidas en un arreglo
+         //$deportes[] = $row['nombreDeporte'];
+
+
+
+         //hacemos un 2 ciclos for para recorrer cada arreglo y guardarlas en un array en conjunto
 //        for($i =0;$i<count($deportes);$i++){
 //            for($j=$i;$j<=$i;$j++){
 //                $resultado[] = " nombreDeporte: " . $deportes[$i] . "," . " fotoDeporte: " . $fotitos[$j];
 //            }
 //        }
 
-            $result->close();
-           return $deportes;
-             
- 
-    }
+         $result->close();
+         return $deportes;
+
+
+     }
+
+
+     //obtiene informacion a traves del email que se le pasa
+        public function obtenerUsuarioEmail($email)
+         {
+             $id_usuario = '';
+             $nombre = '';
+             $email = '';
+             $genero = '';
+             $stmt = $this->con->prepare("SELECT id_usuario, nombre, correo, genero FROM TablaUsuarios WHERE correo = ?");
+             $stmt->bind_param("s", $email);
+             $stmt->execute();
+             $stmt->bind_result($id_usuario, $nombre, $email, $genero);
+             $stmt->fetch_all();
+             $user = array();
+             $user['id_usuario'] = $id_usuario;
+             $user['nombre'] = $nombre;
+             $user['correo'] = $email;
+             $user['genero'] = $genero;
+             return $user;
+         }
+
+
     
     
 //    obtiene las imagenes que pertenezcan al deporte seleccionado
