@@ -37,6 +37,8 @@ $app->get('/usuarios', function (Request $request, Response $response){
 
 });
 
+
+//obtiene todos los eventos en los que esta suscrito sus amigos
 $app->get('/obtenerEventosAmigos/{email}', function (Request $request, Response $response){
 
     $db = new BBDDaplicacion();
@@ -51,6 +53,7 @@ $app->get('/obtenerEventosAmigos/{email}', function (Request $request, Response 
 });
 
 
+//obtiene todos los eventos en lo que esta suscrito el usuario
 $app->get('/obtenerEventosSuscritos/{email}', function (Request $request, Response $response){
 
     $db = new BBDDaplicacion();
@@ -63,6 +66,31 @@ $app->get('/obtenerEventosSuscritos/{email}', function (Request $request, Respon
                 $db->ObtenerEventosSuscritos($email)
             ));
 });
+
+
+
+//suscribe al usuario al evento seleccionado
+$app->get('/suscribirEvento/{email}/{evento}', function (Request $request, Response $response){
+
+
+    $email = $request->getAttribute('email');
+    $evento = $request->getAttribute('evento');
+
+    $db = new BBDDaplicacion();
+    if($db->SuscribirEvento($email,$evento) == true){
+        $responseData['error'] = false;
+        $responseData['mensage'] = 'suscrito correctamente';
+    } else {
+        $responseData['error'] = true;
+        $responseData['message'] = 'ha Habido un error';
+    }
+
+    $response->getBody()->write(json_encode($responseData));
+
+});
+
+
+
 
 
 //obtiene el nombre del deporte y su respectiva foto
@@ -97,11 +125,11 @@ $app->get('/obtenerAmigos/{idUsuario}', function (Request $request, Response $re
 //registrar usuario con todos los parametros marcados
 $app->get('/registroUsuario/{correo}/{nombre}/{apellido}/{password}/{nacionalidad}', function (Request $request, Response $response) {
 
-    $correo = $request->getAttribute('correo');;
-    $nombre = $request->getAttribute('nombre');;
-    $apellido = $request->getAttribute('apellido');;
-    $pass = $request->getAttribute('password');;
-    $nacionalidad = $request->getAttribute('nacionalidad');;
+    $correo = $request->getAttribute('correo');
+    $nombre = $request->getAttribute('nombre');
+    $apellido = $request->getAttribute('apellido');
+    $pass = $request->getAttribute('password');
+    $nacionalidad = $request->getAttribute('nacionalidad');
     $db = new BBDDaplicacion();
     if($db->insertarUsuario($correo, $nombre, $apellido, $pass, $nacionalidad)){
         $responseData['error'] = false;

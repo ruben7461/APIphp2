@@ -85,6 +85,24 @@ class BBDDaplicacion {
 
     }
 
+
+    public function SuscribirEvento($email,$evento){
+
+        $iduser = $this->ObtenerIdUsuario($email);
+        $stmt = $this->mysqli->prepare("INSERT INTO TablaEventos_has_TablaUsuarios(TablaEventos_id_evento,Suscriptor) VALUES(?,?)");
+
+
+        $stmt->bind_param('ii',$evento,$iduser);
+        $r = $stmt->execute();
+        $stmt->close();
+        return $r;
+
+
+
+    }
+
+
+
     public function ObtenerEventosSuscritos($email){
         $iduser = $this->ObtenerIdUsuario($email);
         $stmt = $this->mysqli->prepare("select * from TablaEventos where id_evento in (SELECT TablaEventos_id_evento from TablaEventos_has_TablaUsuarios where Suscriptor = ?)");
