@@ -5,14 +5,16 @@ class Usuarios {
       public $apellidoUsuario;
       //public $nacionalidad;
       public $fotoUsuario;
+      public $id_usuario;
 
 
 
-    function __construct($nombreUsuario,$apellidoUsuario,$fotoUsuario) {
+    function __construct($idusario,$nombreUsuario,$apellidoUsuario,$fotoUsuario) {
         $this->nombreUsuario = $nombreUsuario;
         $this->apellidoUsuario = $apellidoUsuario;
        //$this->nacionalidad = $nacionalidad;
         $this->fotoUsuario = $fotoUsuario;
+        $this->id_usuario = $idusario;
        
     }
 

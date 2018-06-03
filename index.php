@@ -37,6 +37,19 @@ $app->get('/usuarios', function (Request $request, Response $response){
 
 });
 
+$app->get('/obtenerEventosAmigos/{email}', function (Request $request, Response $response){
+
+    $db = new BBDDaplicacion();
+    $email = $request->getAttribute('email');
+    return $response
+        ->withHeader('Content-type', 'application/json')
+        ->getBody()
+        ->write(
+            json_encode(
+                $db->ObtenerEventosAmigos($email)
+            ));
+});
+
 //obtiene el nombre del deporte y su respectiva foto
 $app->get('/deportes', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
@@ -95,10 +108,10 @@ $app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Resp
 
                if( $db->insertarEvento($idUsuario,$deporte)){
                    $responseData['error'] = false;
-                   $responseData['mensage'] = 'evento registrado correctamente';
+                   $responseData['mensaje'] = 'evento registrado correctamente';
                } else {
                    $responseData['error'] = true;
-                   $responseData['mensage'] = 'no se ha podido registrar';
+                   $responseData['mensaje'] = 'no se ha podido registrar';
                }
 
      $response->getBody()->write(json_encode($responseData));
@@ -118,10 +131,11 @@ $app->get('/login/{email}/{password}', function (Request $request, Response $res
 
     if ($db->ComprobarLogin($email, $password) == true) {
         $responseData['error'] = false;
-        $responseData['user'] = $db->obtenerUsuarioEmail($email);
+        $responseData['mensaje'] = "Usuario Correcto";
+        $responseData['Usuario'] = $db->obtenerUsuarioEmail($email);
     } else {
         $responseData['error'] = true;
-        $responseData['message'] = 'usuario invalido';
+        $responseData['mensaje'] = 'usuario invalido';
     }
 
         $response->getBody()->write(json_encode($responseData));

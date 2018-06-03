@@ -58,7 +58,7 @@ class BBDDaplicacion {
       $resultado = $result->fetch_all();
       
       foreach ($resultado as $row){
-         $gentecilla[] = new Usuarios($row[2], $row[3], base64_encode($row[6]));
+         $gentecilla[] = new Usuarios($row[0],$row[2], $row[3], base64_encode($row[6]));
       }
             $result->close();
             return $gentecilla;
@@ -66,6 +66,43 @@ class BBDDaplicacion {
   
     }
 
+    public function ObtenerIdUsuario($email){
+
+
+
+        $stmt = $this->mysqli->prepare("SELECT id_usuario FROM TablaUsuarios where correo = ?");
+
+        $stmt->bind_param('s',$email);
+        $stmt->execute();
+        $stmt->bind_result($resultado);
+        // Obtenemos los valores
+        while ($stmt->fetch()) {
+            return $resultado;;
+        }
+
+        $stmt->close();
+
+
+    }
+
+         public function ObtenerEventosAmigos($email){
+
+            $iduser = $this->ObtenerIdUsuario($email);
+             $stmt = $this->mysqli->prepare("SELECT * FROM TablaEventos WHERE id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
+
+
+             $stmt->bind_param('i',$iduser);
+             $stmt->execute();
+
+            $resultado = $stmt->get_result();
+
+             $eventos = $resultado->fetch_array(MYSQLI_ASSOC);
+
+            return $eventos;
+
+             $stmt->close();
+
+         }
 
     //comprueba el login si es correcto o no
 
@@ -206,7 +243,7 @@ class BBDDaplicacion {
         
         $stmt->close();
         if ($stmt->execute()){
-                return ;
+
                  return USER_CREATION_FAILED;
         }
         return USER_EXIST;
