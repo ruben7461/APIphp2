@@ -50,6 +50,21 @@ $app->get('/obtenerEventosAmigos/{email}', function (Request $request, Response 
             ));
 });
 
+
+$app->get('/obtenerEventosSuscritos/{email}', function (Request $request, Response $response){
+
+    $db = new BBDDaplicacion();
+    $email = $request->getAttribute('email');
+    return $response
+        ->withHeader('Content-type', 'application/json')
+        ->getBody()
+        ->write(
+            json_encode(
+                $db->ObtenerEventosSuscritos($email)
+            ));
+});
+
+
 //obtiene el nombre del deporte y su respectiva foto
 $app->get('/deportes', function (Request $request, Response $response){
     $db = new BBDDaplicacion();

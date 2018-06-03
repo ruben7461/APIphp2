@@ -85,6 +85,25 @@ class BBDDaplicacion {
 
     }
 
+    public function ObtenerEventosSuscritos($email){
+        $iduser = $this->ObtenerIdUsuario($email);
+        $stmt = $this->mysqli->prepare("select * from TablaEventos where id_evento in (SELECT TablaEventos_id_evento from TablaEventos_has_TablaUsuarios where Suscriptor = ?)");
+
+
+        $stmt->bind_param('i',$iduser);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $eventos = $resultado->fetch_all(MYSQLI_ASSOC);
+
+        return $eventos;
+
+        $stmt->close();
+
+    }
+
+
          public function ObtenerEventosAmigos($email){
 
             $iduser = $this->ObtenerIdUsuario($email);
@@ -96,7 +115,7 @@ class BBDDaplicacion {
 
             $resultado = $stmt->get_result();
 
-             $eventos = $resultado->fetch_array(MYSQLI_ASSOC);
+             $eventos = $resultado->fetch_all(MYSQLI_ASSOC);
 
             return $eventos;
 
