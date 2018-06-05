@@ -123,6 +123,33 @@ class BBDDaplicacion {
     }
 
 
+    //obtiene toda la informacion del usuario que se ha logueado
+        public function obtenerInformacionLogueado($email){
+
+            $stmt = $this->mysqli->prepare("select id_usuario,nombre,apellidos,fotoUsuario from TablaUsuarios where correo = ?");
+
+
+            $stmt->bind_param('s',$email);
+            $stmt->execute();
+
+            $resultado = $stmt->get_result();
+
+            $var = $resultado->fetch_all();
+
+            foreach ($var as $row){
+
+                $usuariologueado[] = new Usuarios($row[0],$row[1],$row[2],base64_encode($row[3]));
+            }
+            return $usuariologueado;
+
+            $stmt->close();
+        }
+
+
+
+
+
+        //obtiene todos los eventos creados por los amigos del usuario logueado
          public function ObtenerEventosAmigos($email){
 
             $iduser = $this->ObtenerIdUsuario($email);

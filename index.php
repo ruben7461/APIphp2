@@ -163,6 +163,21 @@ $app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Resp
 });
 
 
+//obtiene toda la informacion del usuario que se ha logueado
+
+$app->get('/obtenerdatoslogueado/{email}', function (Request $request, Response $response){
+    $db = new BBDDaplicacion();
+    $email = $request->getAttribute('email');
+    return $response
+        ->withHeader('Content-type', 'application/json')
+        ->getBody()
+        ->write(
+            json_encode(
+                $db->obtenerInformacionLogueado($email)
+            ));
+
+});
+
 
 //comprobacion del login,si hay resultados,obtiene los datos de ese usuario
 $app->get('/login/{email}/{password}', function (Request $request, Response $response){
