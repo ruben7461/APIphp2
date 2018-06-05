@@ -147,6 +147,28 @@ class BBDDaplicacion {
 
 
 
+        //obtiene todos los eventos que hay en la BBDD
+        public function ObtenerEventos(){
+
+            $stmt = $this->mysqli->query("SELECT TablaEventos.id_evento,TablaEventos.id_creador, TablaEventos.nombreEvento,TablaEventos.descripcion,
+                                                TablaEventos.deporte, TablaEventos.N_jugadores,TablaEventos.fecha,TablaEventos.hora,
+                                                TablaUsuarios.correo, TablaUsuarios.fotoUsuario FROM TablaEventos inner JOIN TablaUsuarios 
+                                                ON TablaEventos.id_creador = TablaUsuarios.id_usuario WHERE TablaEventos.id_creador in 
+                                                (SELECT id_usuario FROM TablaUsuarios)");
+
+            $var = $stmt->fetch_all();
+
+            foreach ($var as $row){
+
+                $eventos[] = new EventosAmigos($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],base64_encode($row[9]));
+            }
+            return $eventos;
+
+
+            $stmt->close();
+
+        }
+
 
 
         //obtiene todos los eventos creados por los amigos del usuario logueado
