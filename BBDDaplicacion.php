@@ -3,6 +3,7 @@
 require './Deporte.php';
 require './Usuarios.php';
 require './Constantes.php';
+require './EventosAmigos.php';
 class BBDDaplicacion {
     
       protected $mysqli;
@@ -128,7 +129,7 @@ class BBDDaplicacion {
              //$stmt = $this->mysqli->prepare("SELECT * FROM TablaEventos WHERE id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
              $stmt = $this->mysqli->prepare("SELECT TablaEventos.id_evento,TablaEventos.id_creador,TablaEventos.nombreEvento,
                                                           TablaEventos.descripcion,TablaEventos.deporte,TablaEventos.N_jugadores,TablaEventos.fecha,
-                                                          TablaEventos.hora, TablaUsuarios.correo FROM TablaEventos inner JOIN TablaUsuarios ON TablaEventos.id_creador = TablaUsuarios.id_usuario 
+                                                          TablaEventos.hora, TablaUsuarios.correo,TablaUsuarios.fotoUsuario FROM TablaEventos inner JOIN TablaUsuarios ON TablaEventos.id_creador = TablaUsuarios.id_usuario 
                                                           WHERE TablaEventos.id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
 
              $stmt->bind_param('i',$iduser);
@@ -136,9 +137,14 @@ class BBDDaplicacion {
 
             $resultado = $stmt->get_result();
 
-             $eventos = $resultado->fetch_all(MYSQLI_ASSOC);
+             $eventos = $resultado->fetch_all();
 
-            return $eventos;
+
+             foreach ($eventos as $row){
+
+                 $eventosAmigos[] = new EventosAmigos($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],base64_encode($row[9]));
+             }
+            return $eventosAmigos;
 
              $stmt->close();
 
