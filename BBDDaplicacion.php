@@ -125,8 +125,11 @@ class BBDDaplicacion {
          public function ObtenerEventosAmigos($email){
 
             $iduser = $this->ObtenerIdUsuario($email);
-             $stmt = $this->mysqli->prepare("SELECT * FROM TablaEventos WHERE id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
-
+             //$stmt = $this->mysqli->prepare("SELECT * FROM TablaEventos WHERE id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
+             $stmt = $this->mysqli->prepare("SELECT TablaEventos.id_evento,TablaEventos.id_creador,TablaEventos.nombreEvento,
+                                                          TablaEventos.descripcion,TablaEventos.deporte,TablaEventos.N_jugadores,TablaEventos.fecha,
+                                                          TablaEventos.hora, TablaUsuarios.correo FROM TablaEventos inner JOIN TablaUsuarios ON TablaEventos.id_creador = TablaUsuarios.id_usuario 
+                                                          WHERE TablaEventos.id_creador in (SELECT id_amigo FROM TablaAmigos where id_usuario = ?)");
 
              $stmt->bind_param('i',$iduser);
              $stmt->execute();
