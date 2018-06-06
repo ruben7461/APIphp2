@@ -54,12 +54,12 @@ class BBDDaplicacion {
      * array con los registros obtenidos de la base de datos
      */
     public function ObtenerPersonas(){        
-        $result = $this->mysqli->query("SELECT * FROM TablaUsuarios"); 
+        $result = $this->mysqli->query("SELECT id_usuario,nombre,apellidos,fotoUsuario FROM TablaUsuarios");
 
       $resultado = $result->fetch_all();
       
       foreach ($resultado as $row){
-         $gentecilla[] = new Usuarios($row[0],$row[2], $row[3], base64_encode($row[6]));
+         $gentecilla[] = new Usuarios($row[0], $row[1],$row[2],base64_encode($row[3]));
       }
             $result->close();
             return $gentecilla;
