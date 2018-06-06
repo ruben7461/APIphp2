@@ -67,9 +67,32 @@ class BBDDaplicacion {
   
     }
 
+    //obtiene todos los amigos que esta siguiendo
+    public function ObtenerAmigosSeguidos($email){
+        $idUser = $this->ObtenerIdUsuario($email);
+        $smt = $this->mysqli->prepare("SELECT id_usuario,nombre,apellidos,fotoUsuario FROM TablaUsuarios where id_usuario in
+                                                (SELECT TablaAmigos.id_amigo from TablaAmigos where id_usuario = ?)");
+
+        $smt->bind_param("i",$idUser);
+        $smt->execute();
+        $result = $smt->get_result();
+        $amigos = $result->fetch_all();
+
+        foreach ($amigos as $row){
+
+            $amiguitos[] = new Usuarios($row[0],$row[1],$row[2],base64_encode($row[3]));
+        }
+        return $amiguitos;
+
+
+        $result->close();
+
+
+
+    }
+
+
     public function ObtenerIdUsuario($email){
-
-
 
         $stmt = $this->mysqli->prepare("SELECT id_usuario FROM TablaUsuarios where correo = ?");
 

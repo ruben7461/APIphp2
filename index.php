@@ -38,6 +38,22 @@ $app->get('/usuarios', function (Request $request, Response $response){
 });
 
 
+//obtiene todos los amigos
+$app->get('/amigosSiguiendo/{email}', function (Request $request, Response $response){
+    $db = new BBDDaplicacion();
+
+    $email = $request->getAttribute('email');
+    return $response
+        ->withHeader('Content-type', 'application/json')
+        ->getBody()
+        ->write(
+            json_encode(
+                $db->ObtenerAmigosSeguidos($email)
+            ));
+
+});
+
+
 //obtiene todos los enventos que hay disponibles
 $app->get('/obtenerEventos', function (Request $request, Response $response){
 
