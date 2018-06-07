@@ -174,9 +174,9 @@ $app->get('/registroUsuario/{correo}/{nombre}/{apellido}/{password}/{nacionalida
 });
 
 //para crear un evento pasandole el idUsuario y el deporte
-$app->get('/crearEvento/{idUsuario}/{deporte}', function (Request $request, Response $response){
+$app->get('/crearEvento/{email}/{deporte}', function (Request $request, Response $response){
     $db = new BBDDaplicacion();
-    $idUsuario = $request->getAttribute('idUsuario');
+    $idUsuario = $request->getAttribute('email');
     $deporte = $request->getAttribute('deporte');
 
                if( $db->insertarEvento($idUsuario,$deporte)){

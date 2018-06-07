@@ -356,7 +356,8 @@ class BBDDaplicacion {
     
     
 //    añade un nuevo evento en la Tabla Eventos con los parametros que le pasamos al llamar al metodo
-      public function insertarEvento($idCreador='',$deporte=''){
+      public function insertarEvento($email='',$deporte=''){
+          $idCreador = $this->ObtenerIdUsuario($email);
         $stmt = $this->mysqli->prepare("INSERT INTO TablaEventos(id_creador,deporte) VALUES (?,?)");
         $stmt->bind_param('ss',$idCreador,$deporte);
         $r = $stmt->execute();
